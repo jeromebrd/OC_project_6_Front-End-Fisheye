@@ -6,6 +6,10 @@
   background-color: #fafafa;
   height: 300px;
   margin: 0 100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 50px;
 }
 
 .contact_button {
@@ -73,4 +77,79 @@ form input {
   height: 68px;
   border: none;
   border-radius: 5px;
+}
+
+/* page photograph */
+.price-bottom {
+  position: fixed;
+  bottom: 0;
+  right: 50px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #db8876;
+  width: 380px;
+  height: 80px;
+  border-radius: 5px 5px 0 0;
+  font-weight: 800;
+  font-size: 24px;
+  z-index: 50;
+}
+
+.photograph-header div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+}
+.photograph-header div h1 {
+  font-size: 64px;
+  font-weight: 400;
+  color: #d3573c;
+}
+.photograph-header div p {
+  font-size: 24px;
+  font-weight: 400;
+  color: #901c1c;
+}
+.photograph-header div span {
+  font-size: 18px;
+  font-weight: 400;
+  color: #525252;
+}
+
+.photograph-header img {
+  height: 200px;
+  width: 200px;
+  object-fit: cover;
+  clip-path: ellipse(45% 45% at 50% 50%);
+}
+
+.photograph-medias {
+  display: grid;
+  row-gap: 20px;
+  grid-template-columns: repeat(3, 1fr);
+  justify-items: center;
+  margin-top: 100px;
+  margin: 100px auto;
+  max-width: 90%;
+}
+
+.photograph-medias img,
+.photograph-medias video {
+  max-width: 100%;
+  width: 350px;
+  height: 300px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.photograph-medias .desc-media {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #901c1c;
+  padding: 15px 0;
+  font-size: 24px;
+  max-width: 100%;
 }
