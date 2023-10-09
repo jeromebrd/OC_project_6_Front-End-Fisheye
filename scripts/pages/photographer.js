@@ -62,6 +62,7 @@ const photographerPage = async () => {
         const pTitle = document.createElement('p');
         const pLikes = document.createElement('p');
         const displayMedias = photographerPageModel.getMediasDOM(media);
+        const i = document.createElement('i');
 
         photographMedias.appendChild(article);
         article.appendChild(a);
@@ -73,6 +74,7 @@ const photographerPage = async () => {
         pTitle.textContent = media.title;
         div.appendChild(pLikes);
         pLikes.textContent = `${media.likes}`;
+        pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
       });
     }
   }
