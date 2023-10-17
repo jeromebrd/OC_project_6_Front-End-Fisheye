@@ -1,8 +1,7 @@
 body {
   position: relative;
 }
-#contact_modal {
-  display: none;
+.modals {
   position: absolute;
   top: 0;
   z-index: 100;
@@ -10,6 +9,67 @@ body {
   height: 100%;
   background: rgba(0, 0, 0, 0.6);
 }
+#contact_modal {
+  display: none;
+}
+#lighthouse_modal {
+  display: none;
+}
+#lighthouse_modal .modal {
+  background-color: white;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  width: 50vw;
+  height: 90vh;
+}
+#lighthouse_modal input#close-modal {
+  position: absolute;
+  top: 5px;
+  right: 0;
+}
+/* .slider {
+  width: 100%;
+  height: 100%;
+} */
+.slider {
+  display: grid;
+  /* flex-direction: row; */
+  grid-template-columns: 5% 1fr 5%;
+  justify-items: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+}
+
+.container-medias img,
+.container-medias video {
+  display: none;
+  object-fit: contain;
+  height: 100%;
+  max-width: 1050px;
+  max-height: 800px;
+  width: 100%;
+  padding: 20px;
+}
+.container-medias img.activ,
+.container-medias video.activ {
+  display: block;
+  animation: fade 0.8s;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .photograph-header {
   background-color: #fafafa;
   height: 300px;
@@ -47,7 +107,9 @@ body {
 
 .modal header {
   justify-content: space-between;
+  align-items: start;
   width: 100%;
+  height: 180px;
 }
 
 .modal header img {
@@ -58,6 +120,10 @@ body {
   font-size: 64px;
   font-weight: normal;
   text-align: center;
+}
+.modal header span {
+  display: block;
+  text-align: left;
 }
 
 form {
@@ -78,7 +144,6 @@ form div {
   width: 100%;
   align-items: self-start;
   margin-bottom: 26px;
-  margin-top: 20px;
 }
 
 form input {
@@ -87,12 +152,17 @@ form input {
   border: none;
   border-radius: 5px;
   margin-bottom: 10px;
+  padding: 10px;
+  font-size: 20px;
 }
 form textarea {
   width: 100%;
   border: none;
   border-radius: 5px;
   height: 170px;
+  padding: 10px;
+  font-size: 20px;
+  font-family: 'DM sans';
 }
 
 /* page photograph */
@@ -150,7 +220,7 @@ form textarea {
   padding: 100px 0;
   max-width: 90%;
 }
-.photograph-medias article a {
+.photograph-medias article .wrap-media {
   display: flex;
   justify-content: center;
   cursor: pointer;

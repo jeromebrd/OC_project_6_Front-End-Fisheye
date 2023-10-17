@@ -1,30 +1,57 @@
-const modal = document.getElementById('contact_modal');
+// const modal = document.getElementById('contact_modal');
+const modals = document.querySelectorAll('.modals');
+const modalContact = document.querySelector('#contact_modal');
+const modalLighthouse = document.querySelector('#lighthouse_modal');
 const main = document.getElementById('main');
 const openBtn = document.querySelector('.contact_button');
 const closeBtn = document.getElementById('close-modal');
+const span = document.createElement('span');
 
-function displayModal() {
-  modal.style.display = 'block';
+// =============================================================================================
+function displayModal(modal) {
+  if (modal === 'modalContact') {
+    // récupérer le nom du photographe pour l'afficher dans le header du form
+    const titleName = document.querySelector('.photograph-header h1');
+    const contactTitle = document.querySelector('#contact_modal h2');
+    const nameInContactForm = titleName.getAttribute('id');
+    contactTitle.appendChild(span).textContent = nameInContactForm;
+    // pour l'affichage de la modale
+    modalContact.style.display = 'block';
+    modalContact.setAttribute('aria-hidden', 'false');
+  } else if (modal === 'modalLighthouse') {
+    modalLighthouse.style.display = 'block';
+    modalLighthouse.setAttribute('aria-hidden', 'false');
+  }
   main.setAttribute('aria-hidden', 'true');
-  modal.setAttribute('aria-hidden', 'false');
   closeBtn.focus();
 }
+// =============================================================================================
 
-function closeModal() {
-  modal.style.display = 'none';
+function closeModal(modal) {
+  if (modal === 'modalContact') {
+    modalContact.style.display = 'none';
+    modalContact.setAttribute('aria-hidden', 'true');
+  } else if (modal === 'modalLighthouse') {
+    modalLighthouse.style.display = 'none';
+    modalLighthouse.setAttribute('aria-hidden', 'true');
+  }
   main.setAttribute('aria-hidden', 'false');
-  modal.setAttribute('aria-hidden', 'true');
 }
-
 // Pour fermer la modal en appuyant sur "echap"
 window.addEventListener('keydown', (e) => {
   const key = e.key;
   if (key === 'Escape') {
-    closeModal();
+    modals.forEach((modal) => {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    });
+    main.setAttribute('aria-hidden', 'false');
   }
 });
+// =============================================================================================
 
-const dataContact = () => {
+// Récupère les datas submit du formulaire
+const getDataContact = () => {
   const form = document.querySelector('form');
   const firstname = document.querySelector('#firstname');
   const lastname = document.querySelector('#lastname');
@@ -42,7 +69,7 @@ const dataContact = () => {
       message: messageValue,
     });
     console.log(dataSubmit);
-    closeModal();
+    closeModal('modalContact');
   });
   let firstnameValue = '';
   let lastnameValue = '';
@@ -61,4 +88,4 @@ const dataContact = () => {
     messageValue = e.target.value;
   });
 };
-dataContact();
+getDataContact();

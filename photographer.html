@@ -22,13 +22,15 @@
     </header>
     <main id="main" aria-hidden="false">
       <div class="photograph-header">
-        <button class="contact_button" onclick="displayModal()">
+        <button class="contact_button" onclick="displayModal('modalContact')">
           Contactez-moi
         </button>
       </div>
       <div class="photograph-medias"></div>
     </main>
+    <!-- modal contact -->
     <div
+      class="modals"
       id="contact_modal"
       aria-hidden="true"
       role="dialog"
@@ -40,7 +42,7 @@
           <input
             type="image"
             src="assets/icons/close.svg"
-            onclick="closeModal()"
+            onclick="closeModal('modalContact')"
             id="close-modal"
           />
         </header>
@@ -78,6 +80,41 @@
           </div>
           <button class="contact_button">Envoyer</button>
         </form>
+      </div>
+    </div>
+    <!-- modal lighthouse -->
+    <div
+      class="modals"
+      id="lighthouse_modal"
+      aria-hidden="true"
+      role="dialog"
+      aria-describedby="image closeup view"
+    >
+      <div class="modal">
+        <input
+          type="image"
+          src="assets/icons/closeRed.svg"
+          onclick="closeModal('modalLighthouse')"
+          id="close-modal"
+          class="close-modal"
+        />
+        <div class="slider">
+          <div class="cont-btn">
+            <input
+              type="image"
+              src="/assets/icons/leftArrow.svg"
+              class="back-btn"
+            />
+          </div>
+          <div class="container-medias"></div>
+          <div class="cont-btn">
+            <input
+              type="image"
+              src="/assets/icons/rightArrow.svg"
+              class="next-btn"
+            />
+          </div>
+        </div>
       </div>
     </div>
     <script src="/scripts/pages/photographer.js"></script>

@@ -7,7 +7,7 @@ async function getPhotographers() {
     const data = await response.json();
     photographers = await data.photographers;
     medias = await data.media;
-    console.log(data);
+    // console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -19,6 +19,9 @@ async function getPhotographers() {
   };
 }
 // =====================================================================
+let i = 0;
+let count = 0;
+
 const photographerPage = async () => {
   const { photographers, medias } = await getPhotographers();
 
@@ -27,6 +30,8 @@ const photographerPage = async () => {
   const idLink = parseInt(params.get('id'));
   const photographHeader = document.querySelector('.photograph-header');
   const photographMedias = document.querySelector('.photograph-medias');
+  const url = window.location.href;
+  console.log(url);
 
   // itérer sur le tableau photographers, pour obtenir chaque id
   for (let i = 0; i < photographers.length; i++) {
@@ -55,30 +60,70 @@ const photographerPage = async () => {
 
       // Pour la partie medias, passer en argumant chaque media a la factory getMedias
       mediasByUser.forEach((media) => {
-        // créer un article pour chaque media, avec un lien a l'interieur de l'article
-        const article = document.createElement('article');
-        const a = document.createElement('a');
-        const div = document.createElement('div');
-        const pTitle = document.createElement('p');
-        const pLikes = document.createElement('p');
+        const mediasSliderElem = document.querySelector('.container-medias');
         const displayMedias = photographerPageModel.getMediasDOM(media);
-        const i = document.createElement('i');
+        const displayMediasSlider = photographerPageModel.getMediasDOM(media);
 
-        photographMedias.appendChild(article);
-        article.appendChild(a);
-        a.appendChild(displayMedias);
+        // ajoute les images pour le slider dans la div .slider > .container-medias
+        mediasSliderElem.appendChild(displayMediasSlider);
+        const itemsInSlider = mediasSliderElem.childNodes;
+        // displayItemInSlider(itemsInSlider);
+        itemsInSlider.forEach((itemSlider) => {
+          itemSlider.setAttribute('class', 'itemsInSlider');
+        });
+        // créer un article pour chaque media, avec un lien a l'interieur de l'article
+        const articleByMedia =
+          photographerPageModel.getArticleMedia(displayMedias);
+        photographMedias.appendChild(articleByMedia);
+        // au click affiche le bon média dans le slide
+        articleByMedia.addEventListener('click', (e) => {
+          const id = e.target.id;
+          for (let i = 0; itemsInSlider.length > i; i++) {
+            let idMedia = itemsInSlider[i].id;
+            itemsInSlider[i].classList.remove('activ');
+            if (idMedia == id) {
+              itemsInSlider[i].classList.add('activ');
+              // count prend l'indice de l'image en cours, du coup si je clique sur l'image en position 3 du tableau, count démarrera au même indice du tableau
+              count = i;
+            }
+          }
+        });
 
         // Ajout titre + likes photo
-        article.appendChild(div).setAttribute('class', 'desc-media');
-        div.appendChild(pTitle);
-        pTitle.textContent = media.title;
-        div.appendChild(pLikes);
-        pLikes.textContent = `${media.likes}`;
-        pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
+        const likesAndTitleMedia =
+          photographerPageModel.getLikesAndTitleMediaDOM(media);
+        articleByMedia.appendChild(likesAndTitleMedia);
       });
     }
   }
 };
+// =====================================================================
+// Slide suivante, slide précédente
+const next = document.querySelector('.next-btn');
+const back = document.querySelector('.back-btn');
+const nextItem = () => {
+  const itemsInSlider = document.querySelectorAll('.itemsInSlider');
+  itemsInSlider[count].classList.remove('activ');
+  if (count < itemsInSlider.length - 1) {
+    count++;
+  } else {
+    count = 0;
+  }
+  itemsInSlider[count].classList.add('activ');
+};
+const backItem = () => {
+  const itemsInSlider = document.querySelectorAll('.itemsInSlider');
+  itemsInSlider[count].classList.remove('activ');
+  if (count > 0) {
+    count--;
+  } else {
+    count = itemsInSlider.length - 1;
+  }
+  itemsInSlider[count].classList.add('activ');
+};
+
+next.addEventListener('click', nextItem);
+back.addEventListener('click', backItem);
 // =====================================================================
 // Création de la page photographe dans le dom selon le photographe
 const createPhotographerPageTemplate = (photographer) => {
@@ -90,8 +135,11 @@ const createPhotographerPageTemplate = (photographer) => {
     const h1 = document.createElement('h1');
     const p = document.createElement('p');
     const span = document.createElement('span');
+    const title = document.querySelector('title');
+    title.textContent = `Fisheye - ${name}`;
     // nom du photographe
     h1.textContent = `${name}`;
+    h1.setAttribute('id', `${name}`);
     // ville + pays
     p.textContent = `${city}, ${country}`;
     // desc
@@ -118,7 +166,7 @@ const createPhotographerPageTemplate = (photographer) => {
   };
 
   const getMediasDOM = (media) => {
-    const { image, video, photographerId, title } = media;
+    const { image, id, video, photographerId, title } = media;
     const linkImg = `assets/medias/${photographerId}/${image}`;
     const linkVideo = `assets/medias/${photographerId}/${video}`;
     const imgMedia = document.createElement('img');
@@ -129,13 +177,37 @@ const createPhotographerPageTemplate = (photographer) => {
     if (image) {
       imgMedia.setAttribute('src', linkImg);
       imgMedia.setAttribute('alt', `${title}`);
+      imgMedia.setAttribute('id', `${id}`);
       return imgMedia;
     }
     if (video) {
       videoMedia.appendChild(source).setAttribute('src', linkVideo);
       videoMedia.setAttribute('controls', '');
+      videoMedia.setAttribute('id', `${id}`);
       return videoMedia;
     }
+  };
+  const getArticleMedia = (displayMedias) => {
+    const article = document.createElement('article');
+    const divMedia = document.createElement('div');
+    article.appendChild(divMedia);
+    divMedia.appendChild(displayMedias);
+    divMedia.setAttribute('onclick', `displayModal('modalLighthouse')`);
+    divMedia.setAttribute('class', 'wrap-media');
+    return article;
+  };
+  const getLikesAndTitleMediaDOM = (media) => {
+    const div = document.createElement('div');
+    const pTitle = document.createElement('p');
+    const pLikes = document.createElement('p');
+    const i = document.createElement('i');
+    div.setAttribute('class', 'desc-media');
+    div.appendChild(pTitle);
+    pTitle.textContent = media.title;
+    div.appendChild(pLikes);
+    pLikes.textContent = `${media.likes}`;
+    pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
+    return div;
   };
 
   return {
@@ -143,6 +215,8 @@ const createPhotographerPageTemplate = (photographer) => {
     getProfilPictureDOM,
     getMediasDOM,
     getInfoAtTheBottomDOM,
+    getLikesAndTitleMediaDOM,
+    getArticleMedia,
   };
 };
 
