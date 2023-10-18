@@ -38,14 +38,15 @@ const photographerPage = async () => {
     if (idLink === photographers[i].id) {
       // passer le photographe correspondant à l'id dans l'url, a la fonction createContact pour afficher la page du photographe en question.
       const mediasByUser = [];
+      const arrLikes = [];
       medias.forEach((media) => {
         if (media.photographerId === photographers[i].id) {
           mediasByUser.push(media);
+          arrLikes.push(media.likes); // création d'un tableau avec le nombre total de likes
         }
       });
-      const photographerPageModel = createPhotographerPageTemplate(
-        photographers[i]
-      );
+      console.log(arrLikes);
+      const photographerPageModel = photographerTemplate(photographers[i]);
 
       // Pour la bannière de profil du photographe
       const profileInfoDOM = photographerPageModel.getProfileInfoDOM();
@@ -55,7 +56,7 @@ const photographerPage = async () => {
 
       // Pour afficher la petite barre de tarif en bas
       const infoFixedAtTheBottom =
-        photographerPageModel.getInfoAtTheBottomDOM();
+        photographerPageModel.getInfoAtTheBottomDOM(arrLikes);
       photographMedias.appendChild(infoFixedAtTheBottom);
 
       // Pour la partie medias, passer en argumant chaque media a la factory getMedias
@@ -98,9 +99,16 @@ const photographerPage = async () => {
   }
 };
 // =====================================================================
-// Slide suivante, slide précédente
+// Changement de slide :
+
 const next = document.querySelector('.next-btn');
 const back = document.querySelector('.back-btn');
+// slide suivante
+/* 
+  Retire la class activ de l'elem affiché dans le slide avant d'incrémenter count,
+  puis ajoute la classe activ sur le nouvel elem.
+  Si count est inférieur au dernier élément, on incrémente ++, sinon cela veut dire qu'on est au dernier élément et qu'il faut revenir a l'élément 0.
+ */
 const nextItem = () => {
   const itemsInSlider = document.querySelectorAll('.itemsInSlider');
   itemsInSlider[count].classList.remove('activ');
@@ -111,6 +119,12 @@ const nextItem = () => {
   }
   itemsInSlider[count].classList.add('activ');
 };
+// slide précédente
+/* 
+  Retire la class activ de l'elem affiché  dans le slide avant de décrémenter count,
+  puis ajoute la classe activ sur le nouvel elem.
+  Si count est sup a 0, on décrémente --, sinon count = au dernier élément du tableau, pour qu'on puisse passer du premier elem au dernier elem.
+ */
 const backItem = () => {
   const itemsInSlider = document.querySelectorAll('.itemsInSlider');
   itemsInSlider[count].classList.remove('activ');
@@ -125,99 +139,5 @@ const backItem = () => {
 next.addEventListener('click', nextItem);
 back.addEventListener('click', backItem);
 // =====================================================================
-// Création de la page photographe dans le dom selon le photographe
-const createPhotographerPageTemplate = (photographer) => {
-  const { name, id, city, country, price, tagline, portrait } = photographer;
-  const picture = `assets/photographers/${portrait}`;
-
-  const getProfileInfoDOM = () => {
-    const div = document.createElement('div');
-    const h1 = document.createElement('h1');
-    const p = document.createElement('p');
-    const span = document.createElement('span');
-    const title = document.querySelector('title');
-    title.textContent = `Fisheye - ${name}`;
-    // nom du photographe
-    h1.textContent = `${name}`;
-    h1.setAttribute('id', `${name}`);
-    // ville + pays
-    p.textContent = `${city}, ${country}`;
-    // desc
-    span.textContent = tagline;
-    // création des éléments dans le DOM
-    div.appendChild(h1);
-    div.appendChild(p);
-    div.appendChild(span);
-    return div;
-  };
-
-  const getProfilPictureDOM = () => {
-    const img = document.createElement('img');
-    img.setAttribute('src', picture);
-    img.setAttribute('alt', `photo de profil de ${name}`);
-    return img;
-  };
-  const getInfoAtTheBottomDOM = () => {
-    const div = document.createElement('div');
-    const p = document.createElement('p');
-    div.setAttribute('class', 'price-bottom');
-    div.appendChild(p).textContent = `${price}€/jour`;
-    return div;
-  };
-
-  const getMediasDOM = (media) => {
-    const { image, id, video, photographerId, title } = media;
-    const linkImg = `assets/medias/${photographerId}/${image}`;
-    const linkVideo = `assets/medias/${photographerId}/${video}`;
-    const imgMedia = document.createElement('img');
-    const videoMedia = document.createElement('video');
-    const source = document.createElement('source');
-
-    // console.log(media);
-    if (image) {
-      imgMedia.setAttribute('src', linkImg);
-      imgMedia.setAttribute('alt', `${title}`);
-      imgMedia.setAttribute('id', `${id}`);
-      return imgMedia;
-    }
-    if (video) {
-      videoMedia.appendChild(source).setAttribute('src', linkVideo);
-      videoMedia.setAttribute('controls', '');
-      videoMedia.setAttribute('id', `${id}`);
-      return videoMedia;
-    }
-  };
-  const getArticleMedia = (displayMedias) => {
-    const article = document.createElement('article');
-    const divMedia = document.createElement('div');
-    article.appendChild(divMedia);
-    divMedia.appendChild(displayMedias);
-    divMedia.setAttribute('onclick', `displayModal('modalLighthouse')`);
-    divMedia.setAttribute('class', 'wrap-media');
-    return article;
-  };
-  const getLikesAndTitleMediaDOM = (media) => {
-    const div = document.createElement('div');
-    const pTitle = document.createElement('p');
-    const pLikes = document.createElement('p');
-    const i = document.createElement('i');
-    div.setAttribute('class', 'desc-media');
-    div.appendChild(pTitle);
-    pTitle.textContent = media.title;
-    div.appendChild(pLikes);
-    pLikes.textContent = `${media.likes}`;
-    pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
-    return div;
-  };
-
-  return {
-    getProfileInfoDOM,
-    getProfilPictureDOM,
-    getMediasDOM,
-    getInfoAtTheBottomDOM,
-    getLikesAndTitleMediaDOM,
-    getArticleMedia,
-  };
-};
 
 photographerPage();
