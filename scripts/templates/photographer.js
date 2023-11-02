@@ -95,12 +95,14 @@ function photographerTemplate(data) {
       imgMedia.setAttribute('src', linkImg);
       imgMedia.setAttribute('alt', `${title}`);
       imgMedia.setAttribute('id', `${id}`);
+      imgMedia.setAttribute('data-title', `${title}`);
       return imgMedia;
     }
     if (video) {
       videoMedia.appendChild(source).setAttribute('src', linkVideo);
       videoMedia.setAttribute('controls', '');
       videoMedia.setAttribute('id', `${id}`);
+      videoMedia.setAttribute('data-title', `${title}`);
       return videoMedia;
     }
   };
@@ -126,6 +128,7 @@ function photographerTemplate(data) {
     div.appendChild(pLikes);
     pLikes.textContent = `${media.likes}`;
     pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
+    i.setAttribute('aria-label', 'likes');
     return div;
   };
 

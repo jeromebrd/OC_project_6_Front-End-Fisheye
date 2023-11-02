@@ -24,43 +24,47 @@ body {
   justify-content: center;
   padding: 0;
   width: 50vw;
-  height: 90vh;
+  height: 94vh;
 }
 #lighthouse_modal input#close-modal {
   position: absolute;
   top: 5px;
   right: 0;
 }
-/* .slider {
-  width: 100%;
-  height: 100%;
-} */
+
 .slider {
-  display: grid;
-  /* flex-direction: row; */
-  grid-template-columns: 5% 1fr 5%;
-  justify-items: center;
+  display: flex;
+  justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100%;
-  padding: 20px;
+}
+.cont-btn {
+  padding: 0 20px;
 }
 
 .container-medias img,
 .container-medias video {
-  display: none;
   object-fit: contain;
   height: 100%;
+  width: 100%;
   max-width: 1050px;
   max-height: 800px;
-  width: 100%;
   padding: 20px;
 }
-.container-medias img.activ,
-.container-medias video.activ {
+/* test */
+.container-medias div {
+  display: none;
+}
+.container-medias div.activ {
+  display: block;
+}
+/*  */
+.container-medias div.activ img,
+.container-medias div.activ video {
   display: block;
   animation: fade 0.8s;
 }
+
 @keyframes fade {
   from {
     opacity: 0;
@@ -68,6 +72,15 @@ body {
   to {
     opacity: 1;
   }
+}
+.title-in-slider {
+  color: #901c1c;
+  font-family: DM Sans;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  padding: 20px;
 }
 
 .photograph-header {
@@ -211,6 +224,53 @@ form textarea {
   clip-path: ellipse(45% 45% at 50% 50%);
 }
 
+/* filter */
+.filter-medias {
+  display: flex;
+  align-items: center;
+  max-width: 90%;
+  margin: 0 auto;
+  padding-top: 40px;
+  position: relative;
+}
+.filter-text {
+  font-size: 18px;
+  font-weight: 700;
+  margin-right: 20px;
+}
+
+#filter-by {
+  width: 170px;
+  background: #901c1c;
+  color: white;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 8px;
+  appearance: none;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.filter-container {
+  position: relative;
+  background-color: #fff;
+  overflow: hidden;
+}
+.icon-select {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  height: 100%;
+  padding: 0 8px;
+  border-radius: 0 5px 5px 0;
+  top: 0;
+  right: 0;
+  color: white;
+  background-color: #901c1c;
+  pointer-events: none;
+}
+
+/* photograph medias */
 .photograph-medias {
   display: grid;
   row-gap: 20px;
