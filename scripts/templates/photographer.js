@@ -129,6 +129,7 @@ function photographerTemplate(data) {
     pLikes.textContent = `${media.likes}`;
     pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
     i.setAttribute('aria-label', 'likes');
+
     return div;
   };
 

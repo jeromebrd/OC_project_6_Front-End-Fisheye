@@ -37,17 +37,7 @@ function closeModal(modal) {
   }
   main.setAttribute('aria-hidden', 'false');
 }
-// Pour fermer la modal en appuyant sur "echap"
-window.addEventListener('keydown', (e) => {
-  const key = e.key;
-  if (key === 'Escape') {
-    modals.forEach((modal) => {
-      modal.style.display = 'none';
-      modal.setAttribute('aria-hidden', 'true');
-    });
-    main.setAttribute('aria-hidden', 'false');
-  }
-});
+
 // =============================================================================================
 
 // Récupère les datas submit du formulaire

@@ -7,7 +7,6 @@ async function getPhotographers() {
     const data = await response.json();
     photographers = await data.photographers;
     medias = await data.media;
-    // console.log(data);
   } catch (error) {
     console.log(error);
   }
@@ -48,17 +47,17 @@ const photographerPage = async () => {
           photographData = photographers[i];
         }
       });
-      const photographerPageModel = photographerTemplate(photographers[i]);
+      const photographerPageTemplate = photographerTemplate(photographers[i]);
 
       // Pour la bannière de profil du photographe
-      const profileInfoDOM = photographerPageModel.getProfileInfoDOM();
-      const profilePictureDOM = photographerPageModel.getProfilPictureDOM();
+      const profileInfoDOM = photographerPageTemplate.getProfileInfoDOM();
+      const profilePictureDOM = photographerPageTemplate.getProfilPictureDOM();
       photographHeader.prepend(profileInfoDOM);
       photographHeader.append(profilePictureDOM);
 
       // Pour afficher la petite barre de tarif en bas
       const infoFixedAtTheBottom =
-        photographerPageModel.getInfoAtTheBottomDOM(arrLikes);
+        photographerPageTemplate.getInfoAtTheBottomDOM(arrLikes);
       photographMedias.appendChild(infoFixedAtTheBottom);
 
       // Pour la partie medias, passer en argumant chaque media a la factory getMedias
@@ -101,7 +100,6 @@ const nextItem = () => {
  */
 const backItem = () => {
   const itemsInSlider = document.querySelectorAll('.items-in-slider');
-  console.log(itemsInSlider[count]);
   itemsInSlider[count].classList.remove('activ');
   itemsInSlider[count].parentElement.classList.remove('activ');
   if (count > 0) {
@@ -115,25 +113,24 @@ const backItem = () => {
 
 next.addEventListener('click', nextItem);
 back.addEventListener('click', backItem);
+
 // =====================================================================
+// trié par :
 const filterSelect = document.getElementById('filter-by');
 filterSelect.addEventListener('change', () => {
   const optionValue = filterSelect.value;
-  console.log(optionValue);
   isFilterBy(optionValue);
   updateMediaDisplay(mediasByUser, photographData);
-  console.log(photographData);
 });
 const isFilterBy = (option) => {
   const optionSelected = option;
-  console.log(mediasByUser);
   if (optionSelected === 'pop') {
     mediasByUser.sort((a, b) => b.likes - a.likes);
   } else if (optionSelected === 'date') {
     mediasByUser.sort((a, b) => {
       const dateA = new Date(a.date);
       const dateB = new Date(b.date);
-      return dateA - dateB;
+      return dateA - dateB; //return par ordre croissant.
     });
   } else if (optionSelected === 'title') {
     mediasByUser.sort((a, b) => a.title.localeCompare(b.title));
@@ -141,36 +138,32 @@ const isFilterBy = (option) => {
     return mediasByUser;
   }
 };
-// fonction de tri pour les dates
-const compareDates = (a, b) => {
-  const dateA = new Date(a.date);
-  const dateB = new Date(b.date);
-  return dateA - dateB; //return par ordre croissant.
-};
+
 // =====================================================================
 
 const createMedia = (media, photographers) => {
-  const photographerPageModel = photographerTemplate(photographers);
+  const photographerPageTemplate = photographerTemplate(photographers);
   const slideMediasContainer = document.querySelector('.container-medias');
-  const displayMedias = photographerPageModel.getMediasDOM(media);
-  const displayMediasSlider = photographerPageModel.getMediasDOM(media);
+  const displayMedias = photographerPageTemplate.getMediasDOM(media);
+  const displayMediasSlider = photographerPageTemplate.getMediasDOM(media);
   const div = document.createElement('div');
-  const span = document.createElement('span');
+  const h2 = document.createElement('h2');
   // ajoute les images pour le slider dans la div .slider > .container-medias
   slideMediasContainer.appendChild(div);
   div.appendChild(displayMediasSlider);
   const itemsInSlider = div.childNodes;
 
   itemsInSlider.forEach((itemSlider) => {
-    div.appendChild(span); //titre de la photo dans le slider
+    div.appendChild(h2); //titre de la photo dans le slider
     const titleContent = itemSlider.getAttribute('data-title');
     itemSlider.setAttribute('class', 'items-in-slider');
-    span.setAttribute('class', 'title-in-slider');
-    span.innerHTML = `${titleContent}`;
+    h2.setAttribute('class', 'title-in-slider');
+    h2.innerHTML = `${titleContent}`;
   });
 
   // créer un article pour chaque media, avec un lien a l'interieur de l'article
-  const articleByMedia = photographerPageModel.getArticleMedia(displayMedias);
+  const articleByMedia =
+    photographerPageTemplate.getArticleMedia(displayMedias);
   photographMedias.appendChild(articleByMedia);
 
   // au click affiche le bon média dans le slide
@@ -188,16 +181,34 @@ const createMedia = (media, photographers) => {
       }
     }
   });
+
   // Ajout titre + likes photo
   const likesAndTitleMedia =
-    photographerPageModel.getLikesAndTitleMediaDOM(media);
+    photographerPageTemplate.getLikesAndTitleMediaDOM(media);
   articleByMedia.appendChild(likesAndTitleMedia);
+
+  const icon = articleByMedia.childNodes[1].childNodes[1].childNodes[1];
+  const textLike = articleByMedia.childNodes[1].childNodes[1].childNodes[0];
+
+  icon.addEventListener('click', () => {
+    icon.classList.toggle('liked');
+    // si la classe liked est activ alors on ajoute +1 like, sinon on retire un like
+    if (icon.classList.contains('liked')) {
+      addLike(textLike);
+      updateSumLikes(arrLikes);
+    } else {
+      removeLike(textLike);
+      updateSumLikes(arrLikes);
+    }
+  });
 };
+
 // =====================================================================
 const updateMediaDisplay = (mediasByUser, photographerData) => {
   // Sélectionne l'élément HTML où les médias sont affichés.
   const mediasContainer = document.querySelector('.photograph-medias');
   const slideMediasContainer = document.querySelector('.container-medias');
+  const photographerPageTemplate = photographerTemplate(photographData);
 
   // Supprime tous les médias actuellement affichés.
   mediasContainer.innerHTML = '';
@@ -208,5 +219,72 @@ const updateMediaDisplay = (mediasByUser, photographerData) => {
   mediasByUser.forEach((media) => {
     createMedia(media, photographerData);
   });
+  const infoFixedAtTheBottom =
+    photographerPageTemplate.getInfoAtTheBottomDOM(arrLikes);
+  mediasContainer.appendChild(infoFixedAtTheBottom);
 };
 photographerPage();
+// =====================================================================
+// fonctions de likes des medias
+const addLike = (textLike) => {
+  let likeNb = Number(textLike.textContent); //converti la valeur en nombre
+  for (let i = 0; i < arrLikes.length; i++) {
+    if (likeNb === arrLikes[i]) {
+      likeNb++;
+      textLike.textContent = likeNb;
+      arrLikes[i] = likeNb;
+    }
+  }
+};
+const removeLike = (textLike) => {
+  let likeNb = Number(textLike.textContent); //converti la valeur en nombre
+  for (let i = 0; i < arrLikes.length; i++) {
+    if (likeNb === arrLikes[i]) {
+      likeNb--;
+      textLike.textContent = likeNb;
+      arrLikes[i] = likeNb;
+    }
+  }
+};
+// mise à jour du nombre de likes total
+const updateSumLikes = (arr) => {
+  // selectionne l'élément du nombre de likes total
+  const likesBottomElem = document.querySelector('.price-bottom');
+  const i = document.createElement('i');
+  let likesText = likesBottomElem.childNodes[0];
+  likesText.textContent = '';
+  const nbLikes = arr.reduce((acc, currentValue) => acc + currentValue);
+  likesText.textContent = nbLikes;
+  likesText.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
+  i.style.paddingLeft = '10px';
+};
+
+// =====================================================================
+// accessibilité
+// Navigation slide
+window.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowLeft') {
+    // encadre la flèche gauche lorsqu'elle est actionnée
+    next.classList.remove('activ-elem');
+    back.classList.add('activ-elem');
+    backItem();
+  } else if (e.key === 'ArrowRight') {
+    // encadre la flèche droite lorsqu'elle est actionnée
+    back.classList.remove('activ-elem');
+    next.classList.add('activ-elem');
+    nextItem();
+  }
+});
+// Pour fermer la modal en appuyant sur "echap"
+window.addEventListener('keydown', (e) => {
+  const key = e.key;
+  if (key === 'Escape') {
+    modals.forEach((modal) => {
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden', 'true');
+    });
+    back.classList.remove('activ-elem');
+    next.classList.remove('activ-elem');
+    main.setAttribute('aria-hidden', 'false');
+  }
+});

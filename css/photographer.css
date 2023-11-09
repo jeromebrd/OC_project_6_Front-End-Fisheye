@@ -313,3 +313,11 @@ form textarea {
   margin-left: 10px;
   cursor: pointer;
 }
+
+.activ-elem {
+  border: 2px solid #901c1c;
+  border-radius: 5px;
+}
+.liked {
+  color: #db8876;
+}
