@@ -251,11 +251,13 @@ form textarea {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .filter-container {
   position: relative;
   background-color: #fff;
   overflow: hidden;
 }
+
 .icon-select {
   display: flex;
   align-items: center;

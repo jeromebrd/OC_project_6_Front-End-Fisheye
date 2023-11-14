@@ -129,6 +129,12 @@ function photographerTemplate(data) {
     pLikes.textContent = `${media.likes}`;
     pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
     i.setAttribute('aria-label', 'likes');
+    // ajout de la class liked si la propriété media.liked = true
+    if (media.liked) {
+      i.classList.add('liked');
+    } else {
+      i.classList.remove('liked');
+    }
 
     return div;
   };

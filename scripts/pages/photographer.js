@@ -19,6 +19,7 @@ async function getPhotographers() {
 }
 // =====================================================================
 const photographMedias = document.querySelector('.photograph-medias');
+const photographHeader = document.querySelector('.photograph-header');
 let i = 0;
 let count = 0;
 let mediasByUser = [];
@@ -27,47 +28,58 @@ let photographData = [];
 
 const photographerPage = async () => {
   const { photographers, medias } = await getPhotographers();
-
   // récupération de l'id du photographe via l'url
   const params = new URL(document.location).searchParams;
   const idLink = parseInt(params.get('id'));
-  const photographHeader = document.querySelector('.photograph-header');
-  // const url = window.location.href;
 
-  // itérer sur le tableau photographers, pour obtenir chaque id
-  for (let i = 0; i < photographers.length; i++) {
-    if (idLink === photographers[i].id) {
-      // passer le photographe correspondant à l'id dans l'url, a la fonction createContact pour afficher la page du photographe en question.
+  //si aucun idLink n'est présent dans l'url on redirige vers index.html
+  if (idLink) {
+    // itérer sur le tableau photographers, pour obtenir chaque id
+    for (let i = 0; i < photographers.length; i++) {
+      if (idLink === photographers[i].id) {
+        // passer le photographe correspondant à l'id dans l'url, a la fonction createContact pour afficher la page du photographe en question.
 
-      medias.forEach((media) => {
-        if (media.photographerId === photographers[i].id) {
-          mediasByUser.push(media);
-          arrLikes.push(media.likes); // création d'un tableau avec le nombre total de likes
-          // Donnée du photographe
-          photographData = photographers[i];
-        }
-      });
-      const photographerPageTemplate = photographerTemplate(photographers[i]);
+        medias.forEach((media) => {
+          if (media.photographerId === photographers[i].id) {
+            mediasByUser.push(media);
+            arrLikes.push(media.likes); // création d'un tableau avec le nombre total de likes
+            // Donnée du photographe
+            photographData = photographers[i];
+          }
+        });
+        const photographerPageTemplate = photographerTemplate(photographers[i]);
 
-      // Pour la bannière de profil du photographe
-      const profileInfoDOM = photographerPageTemplate.getProfileInfoDOM();
-      const profilePictureDOM = photographerPageTemplate.getProfilPictureDOM();
-      photographHeader.prepend(profileInfoDOM);
-      photographHeader.append(profilePictureDOM);
+        // Pour créer la bannière de profil du photographe
+        createProfileBanner(photographerPageTemplate);
 
-      // Pour afficher la petite barre de tarif en bas
-      const infoFixedAtTheBottom =
-        photographerPageTemplate.getInfoAtTheBottomDOM(arrLikes);
-      photographMedias.appendChild(infoFixedAtTheBottom);
+        // Pour afficher la petite barre de likes et de tarif en bas
+        createInfoLikesAndPrice(photographerPageTemplate, arrLikes);
 
-      // Pour la partie medias, passer en argumant chaque media a la factory getMedias
-
-      mediasByUser.forEach((media) => {
-        createMedia(media, photographers[i]);
-      });
+        // Création d'un article (média) pour chaque média par utilisateur
+        mediasByUser.forEach((media) => {
+          createMedia(media, photographers[i]);
+        });
+        // trier par défaut par date
+        isFilterBy('date');
+      }
     }
+  } else {
+    window.location.href = '/index.html';
   }
 };
+
+const createProfileBanner = (template) => {
+  const profileInfoDOM = template.getProfileInfoDOM();
+  const profilePictureDOM = template.getProfilPictureDOM();
+  photographHeader.prepend(profileInfoDOM);
+  photographHeader.append(profilePictureDOM);
+};
+
+const createInfoLikesAndPrice = (template, arr) => {
+  const infoFixedAtTheBottom = template.getInfoAtTheBottomDOM(arr);
+  photographMedias.appendChild(infoFixedAtTheBottom);
+};
+
 // =====================================================================
 // Changement de slide :
 
@@ -115,13 +127,17 @@ next.addEventListener('click', nextItem);
 back.addEventListener('click', backItem);
 
 // =====================================================================
-// trié par :
+/* 
+  fonction pour trier les médias selon l'option du select choisi.
+    >=> par popularité (likes), par date, par titre
+*/
 const filterSelect = document.getElementById('filter-by');
 filterSelect.addEventListener('change', () => {
   const optionValue = filterSelect.value;
   isFilterBy(optionValue);
   updateMediaDisplay(mediasByUser, photographData);
 });
+
 const isFilterBy = (option) => {
   const optionSelected = option;
   if (optionSelected === 'pop') {
@@ -187,8 +203,10 @@ const createMedia = (media, photographers) => {
     photographerPageTemplate.getLikesAndTitleMediaDOM(media);
   articleByMedia.appendChild(likesAndTitleMedia);
 
+  // article > div[1] > p[1] > text[0] & icon[1]
   const icon = articleByMedia.childNodes[1].childNodes[1].childNodes[1];
   const textLike = articleByMedia.childNodes[1].childNodes[1].childNodes[0];
+  const titleContent = articleByMedia.childNodes[1].childNodes[0].textContent;
 
   icon.addEventListener('click', () => {
     icon.classList.toggle('liked');
@@ -196,9 +214,11 @@ const createMedia = (media, photographers) => {
     if (icon.classList.contains('liked')) {
       addLike(textLike);
       updateSumLikes(arrLikes);
+      isLiked(mediasByUser, titleContent, true);
     } else {
       removeLike(textLike);
       updateSumLikes(arrLikes);
+      isLiked(mediasByUser, titleContent, false);
     }
   });
 };
@@ -209,7 +229,7 @@ const updateMediaDisplay = (mediasByUser, photographerData) => {
   const mediasContainer = document.querySelector('.photograph-medias');
   const slideMediasContainer = document.querySelector('.container-medias');
   const photographerPageTemplate = photographerTemplate(photographData);
-
+  // console.log(mediasByUser, mediasData);
   // Supprime tous les médias actuellement affichés.
   mediasContainer.innerHTML = '';
   // Supprime tous les médias du slide.
@@ -219,33 +239,25 @@ const updateMediaDisplay = (mediasByUser, photographerData) => {
   mediasByUser.forEach((media) => {
     createMedia(media, photographerData);
   });
-  const infoFixedAtTheBottom =
-    photographerPageTemplate.getInfoAtTheBottomDOM(arrLikes);
-  mediasContainer.appendChild(infoFixedAtTheBottom);
+
+  createInfoLikesAndPrice(photographerPageTemplate, arrLikes);
 };
-photographerPage();
+
 // =====================================================================
 // fonctions de likes des medias
 const addLike = (textLike) => {
   let likeNb = Number(textLike.textContent); //converti la valeur en nombre
-  for (let i = 0; i < arrLikes.length; i++) {
-    if (likeNb === arrLikes[i]) {
-      likeNb++;
-      textLike.textContent = likeNb;
-      arrLikes[i] = likeNb;
-    }
-  }
+  likeNb++;
+  textLike.textContent = likeNb;
+  arrLikes.push(1);
 };
 const removeLike = (textLike) => {
   let likeNb = Number(textLike.textContent); //converti la valeur en nombre
-  for (let i = 0; i < arrLikes.length; i++) {
-    if (likeNb === arrLikes[i]) {
-      likeNb--;
-      textLike.textContent = likeNb;
-      arrLikes[i] = likeNb;
-    }
-  }
+  likeNb--;
+  textLike.textContent = likeNb;
+  arrLikes.pop();
 };
+
 // mise à jour du nombre de likes total
 const updateSumLikes = (arr) => {
   // selectionne l'élément du nombre de likes total
@@ -258,10 +270,31 @@ const updateSumLikes = (arr) => {
   likesText.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
   i.style.paddingLeft = '10px';
 };
-
+/* 
+  Détails fonction isLiked(arr, title, bool) :
+  >=> arr = tableau d'objet des medias 
+  >=> title = titre du media dans le dom (verification pour la correspondance de l'image dans le DOM et celle dans le tableau) 
+  >=> bool = booléen,
+    -> si true, alors on ajoute un like + on ajoute la propriété liked sur l'objet média
+    -> si false, alors on retire un like + la propriété liked = false 
+ */
+const isLiked = (arr, title, bool) => {
+  arr.forEach((media) => {
+    if (media.title === title) {
+      if (bool) {
+        media.likes = media.likes + 1;
+        media.liked = true;
+      } else {
+        media.likes = media.likes - 1;
+        media.liked = false;
+      }
+    }
+  });
+};
 // =====================================================================
 // accessibilité
 // Navigation slide
+const select = document.querySelector('#filter-by');
 window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') {
     // encadre la flèche gauche lorsqu'elle est actionnée
@@ -288,3 +321,5 @@ window.addEventListener('keydown', (e) => {
     main.setAttribute('aria-hidden', 'false');
   }
 });
+
+photographerPage();
