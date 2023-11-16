@@ -20,6 +20,7 @@ async function getPhotographers() {
 // =====================================================================
 const photographMedias = document.querySelector('.photograph-medias');
 const photographHeader = document.querySelector('.photograph-header');
+const body = document.querySelector('body');
 let i = 0;
 let count = 0;
 let mediasByUser = [];
@@ -31,7 +32,6 @@ const photographerPage = async () => {
   // récupération de l'id du photographe via l'url
   const params = new URL(document.location).searchParams;
   const idLink = parseInt(params.get('id'));
-
   //si aucun idLink n'est présent dans l'url on redirige vers index.html
   if (idLink) {
     // itérer sur le tableau photographers, pour obtenir chaque id
@@ -53,7 +53,7 @@ const photographerPage = async () => {
         createProfileBanner(photographerPageTemplate);
 
         // Pour afficher la petite barre de likes et de tarif en bas
-        createInfoLikesAndPrice(photographerPageTemplate, arrLikes);
+        createFooterLikesAndPrice(photographerPageTemplate, arrLikes);
 
         // Création d'un article (média) pour chaque média par utilisateur
         mediasByUser.forEach((media) => {
@@ -69,15 +69,15 @@ const photographerPage = async () => {
 };
 
 const createProfileBanner = (template) => {
-  const profileInfoDOM = template.getProfileInfoDOM();
-  const profilePictureDOM = template.getProfilPictureDOM();
-  photographHeader.prepend(profileInfoDOM);
-  photographHeader.append(profilePictureDOM);
+  const description = template.getProfileInfoDOM();
+  const profilePicture = template.getProfilPictureDOM();
+  photographHeader.prepend(description);
+  photographHeader.append(profilePicture);
 };
 
-const createInfoLikesAndPrice = (template, arr) => {
-  const infoFixedAtTheBottom = template.getInfoAtTheBottomDOM(arr);
-  photographMedias.appendChild(infoFixedAtTheBottom);
+const createFooterLikesAndPrice = (template, arr) => {
+  const footer = template.getInfoAtTheBottomDOM(arr);
+  body.appendChild(footer);
 };
 
 // =====================================================================
@@ -132,6 +132,7 @@ back.addEventListener('click', backItem);
     >=> par popularité (likes), par date, par titre
 */
 const filterSelect = document.getElementById('filter-by');
+
 filterSelect.addEventListener('change', () => {
   const optionValue = filterSelect.value;
   isFilterBy(optionValue);
@@ -154,7 +155,33 @@ const isFilterBy = (option) => {
     return mediasByUser;
   }
 };
+// Event pour gérer le changement de flèches dans le menu select.
+// >=> Si ouvert flèches vers le haut
+// >=> Si fermé flèche vers le bas
+const iconContainer = document.querySelector('.icon-select');
+const arrowDown = document.querySelector('.fa-chevron-down');
+const arrowUp = document.querySelector('.fa-chevron-up');
 
+// Change les flèches en cliquant dessus avec la souris.
+filterSelect.addEventListener('click', () => {
+  arrowDown.classList.toggle('activ');
+  arrowUp.classList.toggle('activ');
+});
+
+// Change les flèches en cliquant sur la touche du clavier 'Enter'.
+filterSelect.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    arrowDown.classList.toggle('activ');
+    arrowUp.classList.toggle('activ');
+  }
+});
+// Si le focus est perdu en cliquant a côté du select, ça reinitialise les flèches.
+filterSelect.addEventListener('focusout', (e) => {
+  if (e.isTrusted && arrowUp.classList.contains('activ')) {
+    arrowDown.classList.toggle('activ');
+    arrowUp.classList.toggle('activ');
+  }
+});
 // =====================================================================
 
 const createMedia = (media, photographers) => {
@@ -178,47 +205,36 @@ const createMedia = (media, photographers) => {
   });
 
   // créer un article pour chaque media, avec un lien a l'interieur de l'article
-  const articleByMedia =
-    photographerPageTemplate.getArticleMedia(displayMedias);
-  photographMedias.appendChild(articleByMedia);
+  const articleElem = photographerPageTemplate.getArticleMedia(displayMedias);
+  photographMedias.appendChild(articleElem);
 
-  // au click affiche le bon média dans le slide
-  articleByMedia.addEventListener('click', (e) => {
-    const id = e.target.id;
-    const itemsInSlider = document.querySelectorAll('.items-in-slider'); //
-    for (let i = 0; itemsInSlider.length > i; i++) {
-      let idMedia = itemsInSlider[i].id;
-      let parentItemElem = itemsInSlider[i].parentElement;
-      parentItemElem.classList.remove('activ'); //retire a toutes les div la class activ
-      if (idMedia == id) {
-        parentItemElem.classList.add('activ');
-        // count prend l'indice de l'image en cours, du coup si je clique sur l'image en position 3 du tableau, count démarrera au même indice du tableau
-        count = i;
-      }
-    }
-  });
+  // au click souris affiche le bon média dans le slide
+  addAnEvent(articleElem, 'click');
+
+  // au click sur 'Enter' affiche le bon média dans le slide
+  addAnEvent(articleElem, 'keydown');
 
   // Ajout titre + likes photo
   const likesAndTitleMedia =
     photographerPageTemplate.getLikesAndTitleMediaDOM(media);
-  articleByMedia.appendChild(likesAndTitleMedia);
+  articleElem.appendChild(likesAndTitleMedia);
 
   // article > div[1] > p[1] > text[0] & icon[1]
-  const icon = articleByMedia.childNodes[1].childNodes[1].childNodes[1];
-  const textLike = articleByMedia.childNodes[1].childNodes[1].childNodes[0];
-  const titleContent = articleByMedia.childNodes[1].childNodes[0].textContent;
+  const icon = articleElem.childNodes[1].childNodes[1].childNodes[1];
+  const textLike = articleElem.childNodes[1].childNodes[1].childNodes[0];
+  const titleContent = articleElem.childNodes[1].childNodes[0].textContent;
 
   icon.addEventListener('click', () => {
     icon.classList.toggle('liked');
     // si la classe liked est activ alors on ajoute +1 like, sinon on retire un like
     if (icon.classList.contains('liked')) {
       addLike(textLike);
-      updateSumLikes(arrLikes);
       isLiked(mediasByUser, titleContent, true);
+      updateSumLikes(arrLikes);
     } else {
       removeLike(textLike);
-      updateSumLikes(arrLikes);
       isLiked(mediasByUser, titleContent, false);
+      updateSumLikes(arrLikes);
     }
   });
 };
@@ -228,8 +244,7 @@ const updateMediaDisplay = (mediasByUser, photographerData) => {
   // Sélectionne l'élément HTML où les médias sont affichés.
   const mediasContainer = document.querySelector('.photograph-medias');
   const slideMediasContainer = document.querySelector('.container-medias');
-  const photographerPageTemplate = photographerTemplate(photographData);
-  // console.log(mediasByUser, mediasData);
+
   // Supprime tous les médias actuellement affichés.
   mediasContainer.innerHTML = '';
   // Supprime tous les médias du slide.
@@ -239,8 +254,6 @@ const updateMediaDisplay = (mediasByUser, photographerData) => {
   mediasByUser.forEach((media) => {
     createMedia(media, photographerData);
   });
-
-  createInfoLikesAndPrice(photographerPageTemplate, arrLikes);
 };
 
 // =====================================================================
@@ -294,7 +307,6 @@ const isLiked = (arr, title, bool) => {
 // =====================================================================
 // accessibilité
 // Navigation slide
-const select = document.querySelector('#filter-by');
 window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') {
     // encadre la flèche gauche lorsqu'elle est actionnée
@@ -321,5 +333,42 @@ window.addEventListener('keydown', (e) => {
     main.setAttribute('aria-hidden', 'false');
   }
 });
+
+const addAnEvent = (elem, event) => {
+  elem.addEventListener(`${event}`, (e) => {
+    if (event === 'click') {
+      const id = e.target.id;
+      const itemsInSlider = document.querySelectorAll('.items-in-slider'); //
+      for (let i = 0; itemsInSlider.length > i; i++) {
+        let idMedia = itemsInSlider[i].id;
+        let parentItemElem = itemsInSlider[i].parentElement;
+        parentItemElem.classList.remove('activ'); //retire a toutes les div la class activ
+        if (idMedia == id) {
+          parentItemElem.classList.add('activ');
+          // count prend l'indice de l'image en cours, du coup si je clique sur l'image en position 3 du tableau, count démarrera au même indice du tableau
+          count = i;
+        }
+      }
+    }
+    if (event === 'keydown') {
+      if (e.key === 'Enter') {
+        const image = e.target.childNodes[0].firstChild;
+        const id = image.id;
+        const itemsInSlider = document.querySelectorAll('.items-in-slider'); //
+        for (let i = 0; itemsInSlider.length > i; i++) {
+          let idMedia = itemsInSlider[i].id;
+          let parentItemElem = itemsInSlider[i].parentElement;
+          parentItemElem.classList.remove('activ'); //retire a toutes les div la class activ
+          if (idMedia == id) {
+            parentItemElem.classList.add('activ');
+            // count prend l'indice de l'image en cours, du coup si je clique sur l'image en position 3 du tableau, count démarrera au même indice du tableau
+            count = i;
+          }
+        }
+        displayModal('modalLighthouse');
+      }
+    }
+  });
+};
 
 photographerPage();

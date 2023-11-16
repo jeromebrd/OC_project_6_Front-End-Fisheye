@@ -1,6 +1,12 @@
 body {
   position: relative;
 }
+hr {
+  background-color: white;
+  height: 2px;
+  border: none;
+  padding: 20px;
+}
 .modals {
   position: absolute;
   top: 0;
@@ -244,12 +250,16 @@ form textarea {
   background: #901c1c;
   color: white;
   outline: none;
-  border: none;
+  border: 2px solid #901c1c;
   border-radius: 5px;
   padding: 10px 8px;
   appearance: none;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+#filter-by:focus {
+  border-color: black;
 }
 
 .filter-container {
@@ -258,7 +268,10 @@ form textarea {
   overflow: hidden;
 }
 
-.icon-select {
+.icon-select i {
+  display: none;
+}
+.icon-select i.activ {
   display: flex;
   align-items: center;
   position: absolute;
@@ -268,7 +281,7 @@ form textarea {
   top: 0;
   right: 0;
   color: white;
-  background-color: #901c1c;
+  background-color: transparent;
   pointer-events: none;
 }
 

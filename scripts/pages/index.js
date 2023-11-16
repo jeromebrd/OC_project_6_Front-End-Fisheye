@@ -1,4 +1,3 @@
-console.log('index');
 async function getPhotographers() {
   let photographers;
   try {
@@ -9,9 +8,7 @@ async function getPhotographers() {
     console.log(error);
   }
   // et bien retourner le tableau photographers seulement une fois récupéré
-  return {
-    photographers,
-  };
+  return photographers;
 }
 
 async function displayData(photographers) {
@@ -26,7 +23,7 @@ async function displayData(photographers) {
 
 async function init() {
   // Récupère les datas des photographes
-  const { photographers } = await getPhotographers();
+  const photographers = await getPhotographers();
   displayData(photographers);
 }
 

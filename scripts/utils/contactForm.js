@@ -11,10 +11,11 @@ const span = document.createElement('span');
 function displayModal(modal) {
   if (modal === 'modalContact') {
     // récupérer le nom du photographe pour l'afficher dans le header du form
-    const titleName = document.querySelector('.photograph-header h1');
-    const contactTitle = document.querySelector('#contact_modal h2');
-    const nameInContactForm = titleName.getAttribute('id');
-    contactTitle.appendChild(span).textContent = nameInContactForm;
+    const photographerName = document.querySelector(
+      '.photograph-header h1'
+    ).textContent;
+    const modalTitle = document.querySelector('#contact_modal h2');
+    modalTitle.appendChild(span).textContent = photographerName;
     // pour l'affichage de la modale
     modalContact.style.display = 'block';
     modalContact.setAttribute('aria-hidden', 'false');
@@ -25,7 +26,8 @@ function displayModal(modal) {
   main.setAttribute('aria-hidden', 'true');
   closeBtn.focus();
 }
-// =============================================================================================
+
+//=============================================================================================
 
 function closeModal(modal) {
   if (modal === 'modalContact') {

@@ -35,7 +35,8 @@
             <option value="title">Titre</option>
           </select>
           <span class="icon-select">
-            <i class="fa-solid fa-chevron-down"></i>
+            <i class="fa-solid fa-chevron-down activ"></i>
+            <i class="fa-solid fa-chevron-up"></i>
           </span>
         </div>
       </div>
@@ -57,6 +58,7 @@
             src="assets/icons/close.svg"
             onclick="closeModal('modalContact')"
             id="close-modal"
+            role="button"
           />
         </header>
         <form>
@@ -66,21 +68,21 @@
               id="firstname"
               type="text"
               name="firstname"
-              aria-labelledby="label-firstname"
+              aria-labelledby="firstname"
             />
             <label for="lastname">Nom</label>
             <input
               id="lastname"
               type="text"
               name="lastname"
-              aria-labelledby="label-lastname"
+              aria-labelledby="lastname"
             />
             <label for="email">Email</label>
             <input
               id="email"
               type="email"
               name="email"
-              aria-labelledby="label-email"
+              aria-labelledby="email"
             />
             <label for="message">Votre message</label>
             <textarea
@@ -88,7 +90,7 @@
               id="message"
               cols="20"
               rows="10"
-              aria-labelledby="label-message"
+              aria-labelledby="message"
             ></textarea>
           </div>
           <button class="contact_button">Envoyer</button>
@@ -117,6 +119,7 @@
               type="image"
               src="/assets/icons/leftArrow.svg"
               class="back-btn"
+              role="button"
             />
           </div>
           <div class="container-medias"></div>
@@ -125,6 +128,7 @@
               type="image"
               src="/assets/icons/rightArrow.svg"
               class="next-btn"
+              role="button"
             />
           </div>
         </div>

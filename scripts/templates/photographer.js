@@ -13,6 +13,7 @@ function photographerTemplate(data) {
     const a = document.createElement('a');
     a.setAttribute('href', `photographer.html?id=${id}`);
     a.setAttribute('aria-label', `Aller sur le profil de ${name} `);
+    a.setAttribute('title', `Aller sur le profil de ${name} `);
     a.classList.add('photograph-link');
     // nom
     const h2 = document.createElement('h2');
@@ -48,7 +49,6 @@ function photographerTemplate(data) {
     title.textContent = `Fisheye - ${name}`;
     // nom du photographe
     h1.textContent = `${name}`;
-    h1.setAttribute('id', `${name}`);
     // ville + pays
     p.textContent = `${city}, ${country}`;
     // desc
@@ -71,16 +71,16 @@ function photographerTemplate(data) {
   const getInfoAtTheBottomDOM = (arr) => {
     // methode pour additionner toutes les valeurs du tableau
     const nbLikes = arr.reduce((acc, currentValue) => acc + currentValue);
-    const div = document.createElement('div');
+    const footer = document.createElement('footer');
     const p = document.createElement('p');
     const p2 = document.createElement('p');
     const i = document.createElement('i');
-    div.setAttribute('class', 'price-bottom');
-    div.appendChild(p).textContent = `${nbLikes}`;
+    footer.setAttribute('class', 'price-bottom');
+    footer.appendChild(p).textContent = `${nbLikes}`;
     p.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
     i.style.paddingLeft = '10px';
-    div.appendChild(p2).textContent = `${price}€/jour`;
-    return div;
+    footer.appendChild(p2).textContent = `${price}€/jour`;
+    return footer;
   };
   // obtenir les medias (photos et videos) de chaque photographe
   const getMediasDOM = (media) => {
@@ -111,9 +111,11 @@ function photographerTemplate(data) {
     const article = document.createElement('article');
     const divMedia = document.createElement('div');
     article.appendChild(divMedia);
+    article.setAttribute('tabindex', '0');
     divMedia.appendChild(displayMedias);
     divMedia.setAttribute('onclick', `displayModal('modalLighthouse')`);
     divMedia.setAttribute('class', 'wrap-media');
+    divMedia.setAttribute('title', 'Cliquez pour afficher le média');
     return article;
   };
   // affichage du titre + likes de chaque média.
@@ -128,13 +130,10 @@ function photographerTemplate(data) {
     div.appendChild(pLikes);
     pLikes.textContent = `${media.likes}`;
     pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
+    i.setAttribute('role', 'button');
     i.setAttribute('aria-label', 'likes');
     // ajout de la class liked si la propriété media.liked = true
-    if (media.liked) {
-      i.classList.add('liked');
-    } else {
-      i.classList.remove('liked');
-    }
+    media.liked ? i.classList.add('liked') : i.classList.remove('liked');
 
     return div;
   };
