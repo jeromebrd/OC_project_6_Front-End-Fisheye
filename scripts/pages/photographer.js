@@ -8,7 +8,7 @@ async function getPhotographers() {
     photographers = await data.photographers;
     medias = await data.media;
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   // récupération des photographes et medias
@@ -20,6 +20,7 @@ async function getPhotographers() {
 // =====================================================================
 const photographMedias = document.querySelector('.photograph-medias');
 const photographHeader = document.querySelector('.photograph-header');
+const selectElem = document.querySelector('#filter-by');
 const body = document.querySelector('body');
 let i = 0;
 let count = 0;
@@ -59,6 +60,8 @@ const photographerPage = async () => {
         mediasByUser.forEach((media) => {
           createMedia(media, photographers[i]);
         });
+        // Création des options de tri des média dans le select
+        createOption();
         // trier par défaut par date
         isFilterBy('date');
       }
@@ -131,10 +134,26 @@ back.addEventListener('click', backItem);
   fonction pour trier les médias selon l'option du select choisi.
     >=> par popularité (likes), par date, par titre
 */
-const filterSelect = document.getElementById('filter-by');
 
-filterSelect.addEventListener('change', () => {
-  const optionValue = filterSelect.value;
+//creation du select
+const createOption = () => {
+  const choices = [
+    { value: 'pop', text: 'Popularité' },
+    { value: 'date', text: 'Date', selected: true },
+    { value: 'title', text: 'Titre' },
+  ];
+  choices.map((choice) => {
+    const option = document.createElement('option');
+    selectElem.appendChild(option);
+    option.textContent = choice.text;
+    option.setAttribute('value', choice.value);
+    if (choice.selected) {
+      option.setAttribute('selected', '');
+    }
+  });
+};
+selectElem.addEventListener('change', () => {
+  const optionValue = selectElem.value;
   isFilterBy(optionValue);
   updateMediaDisplay(mediasByUser, photographData);
 });
@@ -163,20 +182,20 @@ const arrowDown = document.querySelector('.fa-chevron-down');
 const arrowUp = document.querySelector('.fa-chevron-up');
 
 // Change les flèches en cliquant dessus avec la souris.
-filterSelect.addEventListener('click', () => {
+selectElem.addEventListener('click', () => {
   arrowDown.classList.toggle('activ');
   arrowUp.classList.toggle('activ');
 });
 
 // Change les flèches en cliquant sur la touche du clavier 'Enter'.
-filterSelect.addEventListener('keydown', (e) => {
+selectElem.addEventListener('keydown', (e) => {
   if (e.key === 'Enter') {
     arrowDown.classList.toggle('activ');
     arrowUp.classList.toggle('activ');
   }
 });
 // Si le focus est perdu en cliquant a côté du select, ça reinitialise les flèches.
-filterSelect.addEventListener('focusout', (e) => {
+selectElem.addEventListener('focusout', (e) => {
   if (e.isTrusted && arrowUp.classList.contains('activ')) {
     arrowDown.classList.toggle('activ');
     arrowUp.classList.toggle('activ');

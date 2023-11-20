@@ -1,12 +1,7 @@
 body {
   position: relative;
 }
-hr {
-  background-color: white;
-  height: 2px;
-  border: none;
-  padding: 20px;
-}
+
 .modals {
   position: absolute;
   top: 0;
@@ -245,7 +240,7 @@ form textarea {
   margin-right: 20px;
 }
 
-#filter-by {
+select {
   width: 170px;
   background: #901c1c;
   color: white;
@@ -256,10 +251,15 @@ form textarea {
   appearance: none;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: inherit;
 }
 
-#filter-by:focus {
+select:focus {
   border-color: black;
+}
+
+select option {
+  padding: 10px;
 }
 
 .filter-container {
