@@ -11,7 +11,7 @@ function photographerTemplate(data) {
     img.setAttribute('alt', `photo de profil de ${name}`);
     //lien avec id dans l'url
     const a = document.createElement('a');
-    a.setAttribute('href', `photographer.html?id=${id}`);
+    a.setAttribute('href', `./photographer.html?id=${id}`);
     a.setAttribute('aria-label', `Aller sur le profil de ${name} `);
     a.setAttribute('title', `Aller sur le profil de ${name} `);
     a.classList.add('photograph-link');
