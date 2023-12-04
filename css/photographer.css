@@ -231,7 +231,7 @@ form textarea {
   align-items: center;
   max-width: 90%;
   margin: 0 auto;
-  padding-top: 40px;
+  padding-top: 50px;
   position: relative;
 }
 .filter-text {
@@ -292,7 +292,7 @@ select option {
   grid-template-columns: repeat(3, 1fr);
   justify-items: center;
   margin: 0 auto;
-  padding: 100px 0;
+  padding: 60px 0;
   max-width: 90%;
 }
 .photograph-medias article .wrap-media {
@@ -317,11 +317,11 @@ select option {
   color: #901c1c;
   padding: 15px 0;
   font-size: 24px;
-  max-width: 100%;
+  max-width: 350px;
 }
 .photograph-medias .desc-media p:nth-child(1) {
   flex: 1;
-  max-width: 80%;
+  max-width: 75%;
 }
 
 .photograph-medias article i {
@@ -329,10 +329,6 @@ select option {
   cursor: pointer;
 }
 
-.activ-elem {
-  border: 2px solid #901c1c;
-  border-radius: 5px;
-}
 .liked {
   color: #db8876;
 }

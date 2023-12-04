@@ -22,7 +22,7 @@ const photographMedias = document.querySelector('.photograph-medias');
 const photographHeader = document.querySelector('.photograph-header');
 const selectElem = document.querySelector('#filter-by');
 const body = document.querySelector('body');
-let i = 0;
+// let i = 0;
 let count = 0;
 let mediasByUser = [];
 const arrLikes = [];
@@ -38,17 +38,16 @@ const photographerPage = async () => {
     // itérer sur le tableau photographers, pour obtenir chaque id
     for (let i = 0; i < photographers.length; i++) {
       if (idLink === photographers[i].id) {
-        // passer le photographe correspondant à l'id dans l'url, a la fonction createContact pour afficher la page du photographe en question.
-
+        // passer le photographe correspondant à l'id dans l'url, a la fonction photographerTemplate pour afficher la page du photographe en question.
         medias.forEach((media) => {
           if (media.photographerId === photographers[i].id) {
             mediasByUser.push(media);
             arrLikes.push(media.likes); // création d'un tableau avec le nombre total de likes
-            // Donnée du photographe
+            // Données du photographe
             photographData = photographers[i];
           }
         });
-        const photographerPageTemplate = photographerTemplate(photographers[i]);
+        const photographerPageTemplate = photographerTemplate(photographData);
 
         // Pour créer la bannière de profil du photographe
         createProfileBanner(photographerPageTemplate);
@@ -58,7 +57,7 @@ const photographerPage = async () => {
 
         // Création d'un article (média) pour chaque média par utilisateur
         mediasByUser.forEach((media) => {
-          createMedia(media, photographers[i]);
+          createMedia(media, photographData);
         });
         // Création des options de tri des média dans le select
         createOption();
@@ -177,7 +176,6 @@ const isFilterBy = (option) => {
 // Event pour gérer le changement de flèches dans le menu select.
 // >=> Si ouvert flèches vers le haut
 // >=> Si fermé flèche vers le bas
-const iconContainer = document.querySelector('.icon-select');
 const arrowDown = document.querySelector('.fa-chevron-down');
 const arrowUp = document.querySelector('.fa-chevron-up');
 
@@ -329,13 +327,11 @@ const isLiked = (arr, title, bool) => {
 window.addEventListener('keydown', (e) => {
   if (e.key === 'ArrowLeft') {
     // encadre la flèche gauche lorsqu'elle est actionnée
-    next.classList.remove('activ-elem');
-    back.classList.add('activ-elem');
+    back.focus();
     backItem();
   } else if (e.key === 'ArrowRight') {
     // encadre la flèche droite lorsqu'elle est actionnée
-    back.classList.remove('activ-elem');
-    next.classList.add('activ-elem');
+    next.focus();
     nextItem();
   }
 });
@@ -347,8 +343,6 @@ window.addEventListener('keydown', (e) => {
       modal.style.display = 'none';
       modal.setAttribute('aria-hidden', 'true');
     });
-    back.classList.remove('activ-elem');
-    next.classList.remove('activ-elem');
     main.setAttribute('aria-hidden', 'false');
   }
 });

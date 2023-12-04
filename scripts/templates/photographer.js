@@ -3,7 +3,7 @@ function photographerTemplate(data) {
   const picture = `assets/photographers/${portrait}`;
 
   // page d'accueil
-  function getUserCardDOM() {
+  const getUserCardDOM = () => {
     // article = pour chaque photographe
     const article = document.createElement('article');
     const img = document.createElement('img');
@@ -38,7 +38,7 @@ function photographerTemplate(data) {
     div.appendChild(priceElem);
 
     return article;
-  }
+  };
   // profil des photographes sur leur page
   const getProfileInfoDOM = () => {
     const div = document.createElement('div');
@@ -126,12 +126,15 @@ function photographerTemplate(data) {
     const i = document.createElement('i');
     div.setAttribute('class', 'desc-media');
     div.appendChild(pTitle);
+    pTitle.setAttribute('lang', 'en');
     pTitle.textContent = media.title;
     div.appendChild(pLikes);
     pLikes.textContent = `${media.likes}`;
     pLikes.appendChild(i).setAttribute('class', 'fa-solid fa-heart');
     i.setAttribute('role', 'button');
+    i.setAttribute('aria-role', 'button');
     i.setAttribute('aria-label', 'likes');
+
     // ajout de la class liked si la propriété media.liked = true
     media.liked ? i.classList.add('liked') : i.classList.remove('liked');
 

@@ -36,7 +36,7 @@
           </span>
         </div>
       </div>
-      <div class="photograph-medias"></div>
+      <div class="photograph-medias" aria-live="polite"></div>
     </main>
     <!-- modal contact -->
     <div
@@ -59,34 +59,34 @@
         </header>
         <form>
           <div>
-            <label for="firstname">Prénom</label>
+            <label id="label-firstname" for="firstname">Prénom</label>
             <input
               id="firstname"
               type="text"
               name="firstname"
-              aria-labelledby="firstname"
+              aria-labelledby="label-firstname"
             />
-            <label for="lastname">Nom</label>
+            <label id="label-lastname" for="lastname">Nom</label>
             <input
               id="lastname"
               type="text"
               name="lastname"
-              aria-labelledby="lastname"
+              aria-labelledby="label-lastname"
             />
-            <label for="email">Email</label>
+            <label id="label-email" for="email">Email</label>
             <input
               id="email"
               type="email"
               name="email"
-              aria-labelledby="email"
+              aria-labelledby="label-email"
             />
-            <label for="message">Votre message</label>
+            <label id="label-message" for="message">Votre message</label>
             <textarea
               name="message"
               id="message"
               cols="20"
               rows="10"
-              aria-labelledby="message"
+              aria-labelledby="label-message"
             ></textarea>
           </div>
           <button class="contact_button">Envoyer</button>

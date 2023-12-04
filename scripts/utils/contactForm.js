@@ -50,23 +50,12 @@ const getDataContact = () => {
   const email = document.querySelector('#email');
   const message = document.querySelector('#message');
 
-  let dataSubmit = [];
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    dataSubmit = [];
-    dataSubmit.push({
-      firsname: firstnameValue,
-      lastname: lastnameValue,
-      email: emailValue,
-      message: messageValue,
-    });
-    console.log(dataSubmit);
-    closeModal('modalContact');
-  });
   let firstnameValue = '';
   let lastnameValue = '';
   let emailValue = '';
   let messageValue = '';
+  let dataSubmit = [];
+
   firstname.addEventListener('input', (e) => {
     firstnameValue = e.target.value;
   });
@@ -78,6 +67,19 @@ const getDataContact = () => {
   });
   message.addEventListener('input', (e) => {
     messageValue = e.target.value;
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    dataSubmit = [];
+    dataSubmit.push({
+      firsname: firstnameValue,
+      lastname: lastnameValue,
+      email: emailValue,
+      message: messageValue,
+    });
+    console.log(dataSubmit);
+    closeModal('modalContact');
   });
 };
 getDataContact();
