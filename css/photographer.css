@@ -27,7 +27,7 @@ body {
   width: 50vw;
   height: 94vh;
 }
-#lighthouse_modal input#close-modal {
+#lighthouse_modal input.close-modal {
   position: absolute;
   top: 5px;
   right: 0;
