@@ -3,7 +3,7 @@ async function getPhotographers() {
   let photographers;
   let medias;
   try {
-    const response = await fetch('data/photographers.json');
+    const response = await fetch('./data/photographers.json');
     const data = await response.json();
     photographers = await data.photographers;
     medias = await data.media;
@@ -66,7 +66,7 @@ const photographerPage = async () => {
       }
     }
   } else {
-    window.location.href = '/index.html';
+    window.location.href = '/';
   }
 };
 

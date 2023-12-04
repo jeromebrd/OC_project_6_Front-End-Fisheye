@@ -1,6 +1,6 @@
 function photographerTemplate(data) {
   const { name, portrait, id, city, country, tagline, price } = data;
-  const picture = `assets/photographers/${portrait}`;
+  const picture = `./assets/photographers/${portrait}`;
 
   // page d'accueil
   const getUserCardDOM = () => {
@@ -85,8 +85,8 @@ function photographerTemplate(data) {
   // obtenir les medias (photos et videos) de chaque photographe
   const getMediasDOM = (media) => {
     const { image, id, video, photographerId, title } = media;
-    const linkImg = `assets/medias/${photographerId}/${image}`;
-    const linkVideo = `assets/medias/${photographerId}/${video}`;
+    const linkImg = `./assets/medias/${photographerId}/${image}`;
+    const linkVideo = `./assets/medias/${photographerId}/${video}`;
     const imgMedia = document.createElement('img');
     const videoMedia = document.createElement('video');
     const source = document.createElement('source');
