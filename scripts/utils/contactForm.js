@@ -1,10 +1,7 @@
-// const modal = document.getElementById('contact_modal');
-const modals = document.querySelectorAll('.modals');
 const modalContact = document.querySelector('#contact_modal');
 const modalLighthouse = document.querySelector('#lighthouse_modal');
 const main = document.getElementById('main');
-const openBtn = document.querySelector('.contact_button');
-const closeBtn = document.getElementById('close-modal');
+const closeBtn = document.querySelector('.close-modal');
 const span = document.createElement('span');
 
 // =============================================================================================

@@ -20,6 +20,7 @@ async function getPhotographers() {
 // =====================================================================
 const photographMedias = document.querySelector('.photograph-medias');
 const photographHeader = document.querySelector('.photograph-header');
+const modals = document.querySelectorAll('.modals');
 const selectElem = document.querySelector('#filter-by');
 const body = document.querySelector('body');
 // let i = 0;

@@ -31,8 +31,8 @@
         <div class="filter-container">
           <select name="filter-by" id="filter-by"></select>
           <span class="icon-select">
-            <i class="fa-solid fa-chevron-down activ"></i>
-            <i class="fa-solid fa-chevron-up"></i>
+            <em class="fa-solid fa-chevron-down activ"></em>
+            <em class="fa-solid fa-chevron-up"></em>
           </span>
         </div>
       </div>
@@ -49,8 +49,10 @@
       <div class="modal">
         <header>
           <h2>Contactez-moi</h2>
+          <label for="contactme">close</label>
           <input
             type="image"
+            id="contactme"
             src="./assets/icons/close.svg"
             onclick="closeModal('modalContact')"
             class="close-modal"
@@ -103,8 +105,10 @@
       aria-describedby="image closeup view"
     >
       <div class="modal">
+        <label for="close">close</label>
         <input
           type="image"
+          id="close"
           src="./assets/icons/closeRed.svg"
           onclick="closeModal('modalLighthouse')"
           class="close-modal"
@@ -112,8 +116,10 @@
         />
         <div class="slider">
           <div class="cont-btn">
+            <label for="leftarrow">close</label>
             <input
               type="image"
+              id="leftarrow"
               src="./assets/icons/leftArrow.svg"
               class="back-btn"
               role="button"
@@ -122,11 +128,13 @@
           </div>
           <div class="container-medias"></div>
           <div class="cont-btn">
+            <label for="rightarrow">close</label>
             <input
               type="image"
               src="./assets/icons/rightArrow.svg"
               class="next-btn"
               role="button"
+              id="rightarrow"
               alt="right arrow"
             />
           </div>

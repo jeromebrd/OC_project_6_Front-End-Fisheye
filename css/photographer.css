@@ -268,10 +268,10 @@ select option {
   overflow: hidden;
 }
 
-.icon-select i {
+.icon-select em {
   display: none;
 }
-.icon-select i.activ {
+.icon-select em.activ {
   display: flex;
   align-items: center;
   position: absolute;
@@ -331,4 +331,10 @@ select option {
 
 .liked {
   color: #db8876;
+}
+.modal label[for='close'],
+.modal label[for='rightarrow'],
+.modal label[for='leftarrow'],
+header label[for='contactme'] {
+  display: none;
 }
